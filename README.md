@@ -42,7 +42,7 @@ Usage
 
 CREATE
 ```shell
-echo '{"name": "create_demo_01", "dob": "2019-06-10"}' | http POST http://localhost:5000/customers/100
+echo '{"name": "create_demo_01", "dob": "2019-06-10"}' | http POST http://localhost:5000/customers
 ```
 
 - Reponse
