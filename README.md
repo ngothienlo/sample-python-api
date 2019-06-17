@@ -9,6 +9,16 @@ Cd into source code folder and run command
 chmod +x install.sh
 ```
 
+If you don't want run script. You need:
+
+- config db info for connection in:
+    ```
+    \app\config\config.py
+    ```
+- run this command to create db struct.
+    ```shell
+    python3 ./app/models.py
+    ```
 
 Installation
 ============

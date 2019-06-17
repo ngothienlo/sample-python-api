@@ -1,13 +1,10 @@
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, Date
 from sqlalchemy.sql import func
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date
+from .utils.database import database_connection
 
 
 Base = declarative_base()
-DB_URI = 'postgresql+psycopg2:'\
-         '//assign_user:assign_123@localhost/assignment_api'
-
-# postgres is your username in assign_user. assign_123 is the password.
 
 
 class Customer(Base):
@@ -24,6 +21,5 @@ class Customer(Base):
 
 
 if __name__ == "__main__":
-    engine = create_engine(DB_URI)
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
+    Base.metadata.drop_all(database_connection)
+    Base.metadata.create_all(database_connection)
