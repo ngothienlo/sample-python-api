@@ -2,10 +2,10 @@ import falcon
 # from sqlalchemy import create_engine
 # from falcon_autocrud.middleware import Middleware
 # from resources import CustomerCollectionResource, CustomerResource
-from .resources.customers import (
-    CustomersCollectionResource, CustomersResource, CustomersBulkAddResource)
-from .middleware.database import DatabaseCursor
-from .utils.database import database_connection
+from resources.customers import \
+    CustomersCollectionResource, CustomersResource, CustomersBulkAddResource
+from middleware.database import DatabaseCursor
+from utils.database import database_connection
 
 # old_func = Middleware.process_response
 

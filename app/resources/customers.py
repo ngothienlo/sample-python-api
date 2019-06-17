@@ -2,7 +2,8 @@ import falcon
 from webargs import fields
 from webargs.falconparser import use_args
 
-from app.config import PAGE_SIZE
+
+PAGE_SIZE = 10
 
 # Done
 # Create
