@@ -10,5 +10,5 @@ class DatabaseCursor(object):
 
     def process_response(self, req, resp, resource, req_succeeded):
         # import pdb;pdb.set_trace()
-        if hasattr(req, 'db'):
+        if hasattr(req, 'conn'):
             req.conn.close()

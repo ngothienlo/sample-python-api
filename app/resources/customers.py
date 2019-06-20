@@ -28,6 +28,11 @@ create_customer_args = {
     'dob': fields.Date(location='json', required=True),
 }
 
+update_customer_args = {
+    'name': fields.String(location='json'),
+    'dob': fields.Date(location='json'),
+}
+
 bulk_create_customer_args = {
     'data': fields.List(fields.Nested(create_customer_args), required=True)
 }
@@ -63,9 +68,7 @@ INSERT_CUSTOMER_QUERY = """
 
 UPDATE_CUSTOMER_QUERY = """
     UPDATE  customer
-    SET     name=%(name)s,
-            dob=%(dob)s
-    WHERE   id=%(id)s;"""
+    SET """
 
 
 def get_only_result(conn, query, params):
@@ -102,8 +105,9 @@ class CustomersResource:
         }
         resp.body = json.dumps(results)
 
-    @use_args(create_customer_args)
+    @use_args(update_customer_args)
     def on_put(self, req, resp, args, id_):
+        sql = UPDATE_CUSTOMER_QUERY
         # check to see if exists
         customers = get_only_result(
             req.conn, GET_CUSTOMER_QUERY, {'id': id_})
@@ -113,12 +117,22 @@ class CustomersResource:
 
         data = {
             'id': id_,
-            'name': args['name'],
-            'dob': args['dob'],
         }
 
-        req.conn.execute(UPDATE_CUSTOMER_QUERY, data)
-        resp.status = falcon.HTTP_OK
+        if 'name' in args:
+            data['name'] = args['name']
+            sql += "name=%(name)s"
+        if 'dob' in args:
+            data['dob'] = args['dob']
+            sql = sql + (', ' if 'name' in args else '') + "dob=%(dob)s"
+        if sql != UPDATE_CUSTOMER_QUERY:
+            req.conn.execute(sql, data)
+            resp.status = falcon.HTTP_OK
+        else:
+            results = {
+                'Warning': "Don't you change anything ?",
+            }
+            resp.body = json.dumps(results)
 
     def on_delete(self, req, resp, id_):
         # check to see if exists
