@@ -1,6 +1,7 @@
 import falcon
 from webargs import fields
 from webargs.falconparser import use_args
+import json
 
 
 PAGE_SIZE = 10
@@ -37,42 +38,48 @@ pagination_args = {
 
 # queries
 DELETE_CUSTOMER_QUERY = """
-    DELETE FROM     customers
+    DELETE FROM     customer
     WHERE           id=%(id)s"""
 
 GET_COLLECTION_QUERY = """
     SELECT  *
-    FROM    customers
+    FROM    customer
     LIMIT   %(page_size)s;"""
 
 GET_COLLECTION_PAGINATION_QUERY = """
     SELECT  *
-    FROM    customers
+    FROM    customer
     WHERE   id > %(last_id)s
     LIMIT   %(page_size)s;"""
 
 GET_CUSTOMER_QUERY = """
     SELECT  *
-    FROM    customers
+    FROM    customer
     WHERE   id=%(id)s;"""
 
 INSERT_CUSTOMER_QUERY = """
-    INSERT INTO     customers(name, dob)
+    INSERT INTO     customer(name, dob)
     VALUE           (%(name)s, %(dob)s)"""
 
 UPDATE_CUSTOMER_QUERY = """
-    UPDATE  customers
+    UPDATE  customer
     SET     name=%(name)s,
             dob=%(dob)s
     WHERE   id=%(id)s;"""
 
 
-def get_only_result(cursor, query, params):
+def get_only_result(conn, query, params):
     """
-    Given cursor, query, and params, return customer
+    Given conn, query, and params, return customer
     """
-    cursor.execute(query, params)
-    return cursor.fetchone()
+    rs = conn.execute(query, [params])
+
+    def dictfetchall(ResultProxy_):
+        dict_rs = dict(zip(ResultProxy_.keys(), ResultProxy_.fetchone()))
+        dict_rs['dob'] = dict_rs['dob'].strftime("%Y-%m-%d")
+        return dict_rs
+
+    return dictfetchall(rs)
 
 
 class CustomersResource:
@@ -82,7 +89,7 @@ class CustomersResource:
 
     def on_get(self, req, resp, id_):
         customers = get_only_result(
-            req.cursor, GET_CUSTOMER_QUERY, {'id': id_})
+            req.conn, GET_CUSTOMER_QUERY, {'id': id_})
 
         if not customers:
             raise falcon.HTTPNotFound()
@@ -93,13 +100,13 @@ class CustomersResource:
             'data': customers,
             'error': '',
         }
-        resp.media = results
+        resp.body = json.dumps(results)
 
     @use_args(create_customer_args)
     def on_put(self, req, resp, args, id_):
         # check to see if exists
         customers = get_only_result(
-            req.cursor, GET_CUSTOMER_QUERY, {'id': id_})
+            req.conn, GET_CUSTOMER_QUERY, {'id': id_})
 
         if not customers:
             raise falcon.HTTPNotFound()
@@ -110,18 +117,18 @@ class CustomersResource:
             'dob': args['dob'],
         }
 
-        req.cursor.execute(UPDATE_CUSTOMER_QUERY, data)
+        req.conn.execute(UPDATE_CUSTOMER_QUERY, data)
         resp.status = falcon.HTTP_OK
 
     def on_delete(self, req, resp, id_):
         # check to see if exists
         customers = get_only_result(
-            req.cursor, GET_CUSTOMER_QUERY, {'id': id_})
+            req.conn, GET_CUSTOMER_QUERY, {'id': id_})
 
         if not customers:
             raise falcon.HTTPNotFound()
 
-        req.cursor.execute(DELETE_CUSTOMER_QUERY, {'id': id_})
+        req.conn.execute(DELETE_CUSTOMER_QUERY, {'id': id_})
         resp.status = falcon.HTTP_NO_CONTENT
 
 
@@ -141,8 +148,8 @@ class CustomersCollectionResource:
         else:
             sql_query = GET_COLLECTION_QUERY
 
-        req.cursor.execute(sql_query, data)
-        customers = req.cursor.fetchall()
+        req.conn.execute(sql_query, data)
+        customers = req.conn.fetchall()
 
         if not customers:
             raise falcon.HTTPNotFound()
@@ -155,7 +162,7 @@ class CustomersCollectionResource:
             'error': '',
         }
 
-        resp.media = results
+        resp.body = json.dumps(results)
 
     @use_args(create_customer_args)
     def on_post(self, req, resp, args):
@@ -164,9 +171,9 @@ class CustomersCollectionResource:
             'dob': args['dob'],
         }
 
-        req.cursor.execute(INSERT_CUSTOMER_QUERY, data)
+        req.conn.execute(INSERT_CUSTOMER_QUERY, data)
 
-        customers_id = req.cursor.lastrowid
+        customers_id = req.conn.lastrowid
         resp.location = '/customers/' + str(customers_id)
         resp.status = falcon.HTTP_CREATED
 
@@ -180,8 +187,8 @@ class CustomersBulkAddResource:
     def on_post(self, req, resp, args):
         customers = args['data']
 
-        req.cursor.executemany(INSERT_CUSTOMER_QUERY, customers)
+        req.conn.executemany(INSERT_CUSTOMER_QUERY, customers)
 
-        customers_id = req.cursor.lastrowid
+        customers_id = req.conn.lastrowid
         resp.location = '/customers/' + str(customers_id)
         resp.status = falcon.HTTP_CREATED

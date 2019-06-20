@@ -6,11 +6,9 @@ class DatabaseCursor(object):
     def process_request(self, req, resp):
 
         if req is not None:
-            req.db = self.db_conn()
-            req.cursor = req.db.cursor(dictionary=True)
+            req.conn = self.db_conn()
 
     def process_response(self, req, resp, resource, req_succeeded):
-        if hasattr(req, 'cursor'):
-            req.cursor.close()
+        # import pdb;pdb.set_trace()
         if hasattr(req, 'db'):
-            req.db.close()
+            req.conn.close()
