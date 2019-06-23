@@ -9,6 +9,12 @@ Cd into source code folder and run command
 chmod +x install.sh
 ```
 
+Setup env for app
+
+```
+./install.sh
+```
+
 If you don't want run script. You need:
 
 - config db info for connection in:
@@ -23,12 +29,6 @@ If you don't want run script. You need:
 
 Installation
 ============
-
-Setup env for app
-
-```
-./install.sh
-```
 
 Demodata <optional> - Run after create db from git-repo folder
 ```
