@@ -59,7 +59,7 @@ Usage
 
 LOGIN
 ```shell
-http POST http://localhost:5000/login\?email\='user_test@sample.test'\&pwd\='user_test_pwd'
+http POST http://45.77.250.38:5000/login?email=user_test@sample.test&pwd=user_test_pwd
 ```
 
 - Response
@@ -78,7 +78,7 @@ set-cookie: my_auth_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50a
 
 CREATE
 ```shell
-http POST http://localhost:5000/customers?name=<customer_name>&dob=<customer_dob> authorization:<access_token>
+http POST http://localhost:5000/customers?name=<customer_name>&dob=<customer_dob> { HEADER: { HEADER: authorization:<access_token> } }
 ```
 
 - Example
@@ -109,11 +109,11 @@ content-type: application/json
 
 
 READ
-http://localhost:5000/customers/1 authorization:<access_token>
+http://localhost:5000/customers/1 { HEADER: authorization:<access_token> }
 
 - get
 ```shell
-http GET http://localhost:5000/customers/1 authorization:<access_token>
+http GET http://localhost:5000/customers/1 { HEADER: authorization:<access_token> }
 ```
 
 - Reponse
@@ -140,11 +140,11 @@ content-type: application/json
 
 UPDATE
 ```shell
-http PUT http://localhost:5000/customers/12?<field_update>=<update_value> authorization:<access_token>
+http PUT http://localhost:5000/customers/12?<field_update>=<update_value> { HEADER: authorization:<access_token> }
 ```
 - Example
 ```shell
-http PUT http://localhost:5000/customers?name=customer_01&dob=1989-01-01  authorization:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDE0NzB9.WAPPGG5OlfhIot_QfeMOKibpFRusWvIEiNM6ZzXuvSw
+http PUT http://localhost:5000/customers/12?name=customer_01&dob=1989-01-01  authorization:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDE0NzB9.WAPPGG5OlfhIot_QfeMOKibpFRusWvIEiNM6ZzXuvSw
 ```
 
 - Reponse
@@ -170,7 +170,7 @@ content-type: application/json
 
 DELETE
 ```shell
-http DELETE http://localhost:5000/customers/13 authorization:<access_token>
+http DELETE http://localhost:5000/customers/13 { HEADER: authorization:<access_token> }
 ```
 
 - Reponse

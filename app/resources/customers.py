@@ -3,6 +3,7 @@ import traceback
 from webargs import fields
 from webargs.falconparser import use_args
 import json
+from datetime import datetime
 
 
 PAGE_SIZE = 10
@@ -135,8 +136,11 @@ class CustomersResource:
                 'name' in args or 'name' in req.params) else ''
                 ) + "dob=%(dob)s"
         if sql != UPDATE_CUSTOMER_QUERY:
+            sql += ', updated_at=NOW()'
             req.conn.execute(sql, data)
             resp.status = falcon.HTTP_OK
+            data['updated_at'] = str(datetime.now())
+            resp.body = json.dumps(data)
         else:
             results = {
                 'Warning': "Don't you change anything ?",
