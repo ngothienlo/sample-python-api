@@ -12,9 +12,10 @@ chmod +x install.sh
 If you don't want run script. You need:
 
 - config db info for connection in:
-    ```
+    ```shell
     \app\config\config.py
     ```
+
 - run this command to create db struct.
     ```shell
     python3 ./app/models.py
@@ -31,7 +32,7 @@ Setup env for app
 
 Demodata <optional> - Run after create db from git-repo folder
 ```
-python3 testing_script.py
+python3 create_demo_data.py
 ```
 
 Start server - From git-repo folder
@@ -43,8 +44,14 @@ chmod +x ./app/run.sh
 
 Stop server
 
+```shell
+    Ctrl + C
 ```
-Ctrl + C
+
+or 
+
+```shell
+    ./app/run.sh stop
 ```
 
 Usage
