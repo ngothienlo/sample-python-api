@@ -171,7 +171,6 @@ class CustomersCollectionResource:
         cursor = req.conn.execute(sql_query, data)
 
         def dictfetchall(ResultProxy_):
-            # import pdb;pdb.set_trace()
             dict_rs = ResultProxy_.fetchall()
             keys = ResultProxy_.keys()
             rs_formated = []
@@ -196,7 +195,6 @@ class CustomersCollectionResource:
 
     @use_args(create_customer_args)
     def on_post(self, req, resp, args):
-        # import pdb;pdb.set_trace()
         data = {
             'name': args['name'] or req.params['name'],
             'dob': args['dob'] or req.params['dob'],

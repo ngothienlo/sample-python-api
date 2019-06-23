@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Date
-from utils.database import database_connection
+from sqlalchemy import Column, Integer, String, DateTime, Date, create_engine
+from config.config import DATABASE_URL
 
 
 Base = declarative_base()
@@ -21,5 +21,6 @@ class Customer(Base):
 
 
 if __name__ == "__main__":
-    Base.metadata.drop_all(database_connection)
-    Base.metadata.create_all(database_connection)
+    engine = create_engine(DATABASE_URL)
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
