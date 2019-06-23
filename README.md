@@ -18,7 +18,7 @@ If you don't want run script. You need:
 
 - run this command to create db struct.
     ```shell
-    python3 ./app/models.py
+    python3 ./app/youngest_customers.py
     ```
 
 Installation
@@ -57,14 +57,33 @@ or
 Usage
 =====
 
+LOGIN
+```shell
+http POST http://localhost:5000/login\?email\='user_test@sample.test'\&pwd\='user_test_pwd'
+```
+
+- Response
+```json
+HTTP/1.1 200 OK
+Connection: close
+Date: Sun, 23 Jun 2019 13:51:10 GMT
+Server: gunicorn/19.9.0
+content-length: 0
+content-type: application/json
+set-cookie: my_auth_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDE0NzB9.WAPPGG5OlfhIot_QfeMOKibpFRusWvIEiNM6ZzXuvSw; HttpOnly; Max-Age=86400; Path=/customers; Secure
+```
+
+
+
+
 CREATE
 ```shell
-http POST http://localhost:5000/customers?name=<customer_name>&dob=<customer_dob>
+http POST http://localhost:5000/customers?name=<customer_name>&dob=<customer_dob> authorization:<access_token>
 ```
 
 - Example
 ```shell
-http POST http://localhost:5000/customers?name=customer_01&dob=1989-01-01
+http POST http://localhost:5000/customers?name=customer_01&dob=1989-01-01 authorization:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDE0NzB9.WAPPGG5OlfhIot_QfeMOKibpFRusWvIEiNM6ZzXuvSw
 ```
 
 - Reponse
@@ -86,12 +105,15 @@ content-type: application/json
 }
 ```
 
+
+
+
 READ
-http://localhost:5000/customers/1
+http://localhost:5000/customers/1 authorization:<access_token>
 
 - get
 ```shell
-http GET http://localhost:5000/customers/1
+http GET http://localhost:5000/customers/1 authorization:<access_token>
 ```
 
 - Reponse
@@ -114,13 +136,15 @@ content-type: application/json
 
 ```
 
+
+
 UPDATE
 ```shell
-http PUT http://localhost:5000/customers/12?<field_update>=<update_value>
+http PUT http://localhost:5000/customers/12?<field_update>=<update_value> authorization:<access_token>
 ```
 - Example
 ```shell
-http PUT http://localhost:5000/customers?name=customer_01&dob=1989-01-01
+http PUT http://localhost:5000/customers?name=customer_01&dob=1989-01-01  authorization:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDE0NzB9.WAPPGG5OlfhIot_QfeMOKibpFRusWvIEiNM6ZzXuvSw
 ```
 
 - Reponse
@@ -142,9 +166,11 @@ content-type: application/json
 }
 ```
 
+
+
 DELETE
 ```shell
-http DELETE  http://localhost:5000/customers/13
+http DELETE http://localhost:5000/customers/13 authorization:<access_token>
 ```
 
 - Reponse

@@ -1,4 +1,5 @@
 import falcon
+import traceback
 from webargs import fields
 from webargs.falconparser import use_args
 import json
@@ -196,8 +197,9 @@ class CustomersCollectionResource:
 
     def on_post(self, req, resp):
         if 'name' not in req.params or 'dob' not in req.params:
-            return Warning(
-                'You must fill both name and dob for create new cus')
+            raise falcon.HTTPBadRequest(
+                'You must fill both name and dob for create new cus',
+                traceback.format_exc())
         data = {
             'name': req.params['name'],
             'dob': req.params['dob'],
