@@ -193,11 +193,12 @@ class CustomersCollectionResource:
 
         resp.body = json.dumps(results)
 
-    @use_args(create_customer_args)
-    def on_post(self, req, resp, args):
+    def on_post(self, req, resp):
+        if 'name' not in req.params or 'dob' not in req.params:
+            return Warning('You must fill both name and dob for create new cus')
         data = {
-            'name': args['name'] or req.params['name'],
-            'dob': args['dob'] or req.params['dob'],
+            'name': req.params['name'],
+            'dob': req.params['dob'],
         }
         cursor = req.conn.execute(INSERT_CUSTOMER_QUERY, data)
 
