@@ -47,7 +47,7 @@ DELETE_CUSTOMER_QUERY = """
     WHERE           id=%(id)s;"""
 
 GET_COLLECTION_QUERY = """
-    SELECT  id, name, dob::VARCHAR
+    SELECT  id, name, dob::VARCHAR, updated_at::VARCHAR
     FROM    customer;"""
 
 GET_COLLECTION_PAGINATION_QUERY = """
@@ -57,7 +57,7 @@ GET_COLLECTION_PAGINATION_QUERY = """
     LIMIT   %(page_size)s;"""
 
 GET_CUSTOMER_QUERY = """
-    SELECT  *
+    SELECT  id, name, dob::VARCHAR, updated_at::VARCHAR
     FROM    customer
     WHERE   id=%(id)s;"""
 
@@ -78,9 +78,12 @@ def get_only_result(conn, query, params):
     rs = conn.execute(query, [params])
 
     def dictfetchone(ResultProxy_):
-        dict_rs = dict(zip(ResultProxy_.keys(), ResultProxy_.fetchone()))
-        dict_rs['dob'] = dict_rs['dob'].strftime("%Y-%m-%d")
-        return dict_rs
+        result = ResultProxy_.fetchone()
+        if result:
+            dict_rs = dict(zip(ResultProxy_.keys(), result))
+            return dict_rs
+        else:
+            return {}
 
     return dictfetchone(rs)
 
@@ -101,7 +104,7 @@ class CustomersResource:
 
         results = {
             'data': customers,
-            'error': '',
+            'error': 'None',
         }
         resp.body = json.dumps(results)
 
@@ -119,11 +122,13 @@ class CustomersResource:
             'id': id_,
         }
 
-        if 'name' in args:
-            data['name'] = args['name']
+        if 'name' in args or 'name' in req.params:
+            data['name'] = args.get('name') and args.get(
+                'name') or req.params.get('name')
             sql += "name=%(name)s"
-        if 'dob' in args:
-            data['dob'] = args['dob']
+        if 'dob' in args or 'dob' in req.params:
+            data['dob'] = args.get('dob') and args.get(
+                'dob') or req.params.get('dob')
             sql = sql + (', ' if 'name' in args else '') + "dob=%(dob)s"
         if sql != UPDATE_CUSTOMER_QUERY:
             req.conn.execute(sql, data)
@@ -189,9 +194,10 @@ class CustomersCollectionResource:
 
     @use_args(create_customer_args)
     def on_post(self, req, resp, args):
+        import pdb;pdb.set_trace()
         data = {
-            'name': args['name'],
-            'dob': args['dob'],
+            'name': args['name'] or req.params['name'],
+            'dob': args['dob'] or req.params['dob'],
         }
         cursor = req.conn.execute(INSERT_CUSTOMER_QUERY, data)
 

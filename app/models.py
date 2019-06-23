@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Date
-from sqlalchemy.sql import func
-from .utils.database import database_connection
+from utils.database import database_connection
 
 
 Base = declarative_base()
@@ -16,8 +16,8 @@ class Customer(Base):
     dob = Column(Date)
     updated_at = Column(
         DateTime(timezone=True),
-        default=func.now(),
-        onupdate=func.now())
+        default=datetime.utcnow(),
+        onupdate=datetime.utcnow())
 
 
 if __name__ == "__main__":
