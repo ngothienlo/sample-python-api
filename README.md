@@ -110,7 +110,6 @@ content-type: application/json
 UPDATE
 ```shell
 echo '{"name": "Cus_name_update_01"}' | http PUT http://localhost:5000/customers/12
-echo '{"name": "Cus_name_update_01"}' | http PATCH http://localhost:5000/customers/12
 ```
 
 - Reponse

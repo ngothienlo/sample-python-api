@@ -44,12 +44,11 @@ pagination_args = {
 # queries
 DELETE_CUSTOMER_QUERY = """
     DELETE FROM     customer
-    WHERE           id=%(id)s"""
+    WHERE           id=%(id)s;"""
 
 GET_COLLECTION_QUERY = """
-    SELECT  *
-    FROM    customer
-    LIMIT   %(page_size)s;"""
+    SELECT  id, name, dob::VARCHAR
+    FROM    customer;"""
 
 GET_COLLECTION_PAGINATION_QUERY = """
     SELECT  *
@@ -64,7 +63,8 @@ GET_CUSTOMER_QUERY = """
 
 INSERT_CUSTOMER_QUERY = """
     INSERT INTO     customer(name, dob)
-    VALUE           (%(name)s, %(dob)s)"""
+    VALUES           (%(name)s, %(dob)s)
+    RETURNING id;"""
 
 UPDATE_CUSTOMER_QUERY = """
     UPDATE  customer
@@ -77,12 +77,12 @@ def get_only_result(conn, query, params):
     """
     rs = conn.execute(query, [params])
 
-    def dictfetchall(ResultProxy_):
+    def dictfetchone(ResultProxy_):
         dict_rs = dict(zip(ResultProxy_.keys(), ResultProxy_.fetchone()))
         dict_rs['dob'] = dict_rs['dob'].strftime("%Y-%m-%d")
         return dict_rs
 
-    return dictfetchall(rs)
+    return dictfetchone(rs)
 
 
 class CustomersResource:
@@ -155,16 +155,25 @@ class CustomersCollectionResource:
     def on_get(self, req, resp, args):
         data = {}
         data['page_size'] = PAGE_SIZE
-
         if 'last_id' in args:
             data['last_id'] = args['last_id']
             sql_query = GET_COLLECTION_PAGINATION_QUERY
         else:
             sql_query = GET_COLLECTION_QUERY
 
-        req.conn.execute(sql_query, data)
-        customers = req.conn.fetchall()
+        cursor = req.conn.execute(sql_query, data)
 
+        def dictfetchall(ResultProxy_):
+            # import pdb;pdb.set_trace()
+            dict_rs = ResultProxy_.fetchall()
+            keys = ResultProxy_.keys()
+            rs_formated = []
+            for line in dict_rs:
+                line = dict(zip(keys, line))
+                rs_formated.append(line)
+            return rs_formated
+
+        customers = dictfetchall(cursor)
         if not customers:
             raise falcon.HTTPNotFound()
 
@@ -184,10 +193,9 @@ class CustomersCollectionResource:
             'name': args['name'],
             'dob': args['dob'],
         }
+        cursor = req.conn.execute(INSERT_CUSTOMER_QUERY, data)
 
-        req.conn.execute(INSERT_CUSTOMER_QUERY, data)
-
-        customers_id = req.conn.lastrowid
+        customers_id = cursor.fetchone()[0]
         resp.location = '/customers/' + str(customers_id)
         resp.status = falcon.HTTP_CREATED
 
