@@ -33,7 +33,7 @@ source .demo_api/bin/activate
 pip install -r requirements.txt
 
 source .demo_api/bin/activate
-python3 ./app/models.py
+python3 ./app/youngest_customers.py
 
 
 echo "Install required packages finished"
