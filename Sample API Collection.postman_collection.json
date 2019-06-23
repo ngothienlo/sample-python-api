@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "d36e8292-2f96-4e29-a96b-4ac63cacd631",
+		"name": "Sample API Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://45.77.250.38:5000/login?email=user_test@sample.test&pwd=user_test_pwd",
+					"protocol": "http",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "user_test@sample.test"
+						},
+						{
+							"key": "pwd",
+							"value": "user_test_pwd"
+						}
+					]
+				},
+				"description": "Login and get access token"
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDM3NjN9.e2bSrWtKdJWNmRsu4dU1sRmlA2Sz4L3YpFTMhgenJzE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "45.77.250.38:5000/customers?name=create_cus_019&dob=2019-01-01",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"customers"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "create_cus_019"
+						},
+						{
+							"key": "dob",
+							"value": "2019-01-01"
+						}
+					]
+				},
+				"description": "Create a customer"
+			},
+			"response": []
+		},
+		{
+			"name": "GET",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDM3NjN9.e2bSrWtKdJWNmRsu4dU1sRmlA2Sz4L3YpFTMhgenJzE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://45.77.250.38:5000/customers",
+					"protocol": "http",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"customers"
+					]
+				},
+				"description": "Get customer info"
+			},
+			"response": []
+		},
+		{
+			"name": "GET 2",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDM3NjN9.e2bSrWtKdJWNmRsu4dU1sRmlA2Sz4L3YpFTMhgenJzE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://45.77.250.38:5000/customers/102",
+					"protocol": "http",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"customers",
+						"102"
+					]
+				},
+				"description": "Get one customer by ID:"
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "45.77.250.38:5000/customers/1?dob=2019-01-03",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"customers",
+						"1"
+					],
+					"query": [
+						{
+							"key": "dob",
+							"value": "2019-01-03"
+						}
+					]
+				},
+				"description": "Update customer info"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkZW50aWZpZXIiOiJ1c2VyX3Rlc3RAc2FtcGxlLnRlc3QiLCJleHAiOjE1NjEzMDM3NjN9.e2bSrWtKdJWNmRsu4dU1sRmlA2Sz4L3YpFTMhgenJzE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "45.77.250.38:5000/customers/11",
+					"host": [
+						"45",
+						"77",
+						"250",
+						"38"
+					],
+					"port": "5000",
+					"path": [
+						"customers",
+						"11"
+					]
+				},
+				"description": "Delete a customer"
+			},
+			"response": []
+		}
+	]
+}
