@@ -129,7 +129,9 @@ class CustomersResource:
         if 'dob' in args or 'dob' in req.params:
             data['dob'] = args.get('dob') and args.get(
                 'dob') or req.params.get('dob')
-            sql = sql + (', ' if 'name' in args else '') + "dob=%(dob)s"
+            sql = sql + (', ' if (
+                'name' in args or 'name' in req.params) else ''
+                ) + "dob=%(dob)s"
         if sql != UPDATE_CUSTOMER_QUERY:
             req.conn.execute(sql, data)
             resp.status = falcon.HTTP_OK
@@ -194,7 +196,7 @@ class CustomersCollectionResource:
 
     @use_args(create_customer_args)
     def on_post(self, req, resp, args):
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         data = {
             'name': args['name'] or req.params['name'],
             'dob': args['dob'] or req.params['dob'],
