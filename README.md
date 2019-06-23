@@ -52,7 +52,12 @@ Usage
 
 CREATE
 ```shell
-echo '{"name": "create_demo_01", "dob": "2019-06-10"}' | http POST http://localhost:5000/customers
+http POST http://localhost:5000/customers?name=<customer_name>&dob=<customer_dob>
+```
+
+- Example
+```shell
+http POST http://localhost:5000/customers?name=customer_01&dob=1989-01-01
 ```
 
 - Reponse
@@ -82,11 +87,6 @@ http://localhost:5000/customers/1
 http GET http://localhost:5000/customers/1
 ```
 
-- search
-```shell
-http GET http://localhost:5000/customers\?name\='Eric Dominguez'
-```
-
 - Reponse
 ```json
 HTTP/1.1 200 OK
@@ -109,7 +109,11 @@ content-type: application/json
 
 UPDATE
 ```shell
-echo '{"name": "Cus_name_update_01"}' | http PUT http://localhost:5000/customers/12
+http PUT http://localhost:5000/customers/12?<field_update>=<update_value>
+```
+- Example
+```shell
+http PUT http://localhost:5000/customers?name=customer_01&dob=1989-01-01
 ```
 
 - Reponse

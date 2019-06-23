@@ -23,6 +23,7 @@ PAGE_SIZE = 10
 #   * collection: DELETE not allowed
 #   * customer: delete customer, return something in response body or 404
 
+# for args input
 create_customer_args = {
     'name': fields.String(location='json', required=True),
     'dob': fields.Date(location='json', required=True),
@@ -195,7 +196,8 @@ class CustomersCollectionResource:
 
     def on_post(self, req, resp):
         if 'name' not in req.params or 'dob' not in req.params:
-            return Warning('You must fill both name and dob for create new cus')
+            return Warning(
+                'You must fill both name and dob for create new cus')
         data = {
             'name': req.params['name'],
             'dob': req.params['dob'],
@@ -205,6 +207,7 @@ class CustomersCollectionResource:
         customers_id = cursor.fetchone()[0]
         resp.location = '/customers/' + str(customers_id)
         resp.status = falcon.HTTP_CREATED
+        resp.body = json.dumps({'new_id': str(customers_id)})
 
 
 class CustomersBulkAddResource:
